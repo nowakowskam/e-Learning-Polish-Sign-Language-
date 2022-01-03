@@ -4,7 +4,6 @@ from django.db import models
 from embed_video.fields import EmbedVideoField
 
 
-
 class Lesson(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     url = EmbedVideoField(blank=True, null=True)
@@ -22,9 +21,8 @@ class Test(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=80)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
-    #imagefiled
-    #question
-    # TODO description
+    image = models.ImageField(upload_to="tests", blank=True)
+    question = models.TextField(verbose_name="Question", editable=True)
 
 
 class Answear(models.Model):

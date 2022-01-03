@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import  Lesson, Test, Answear, Learner, Takentest, Teacher
+from .models import Lesson, Test, Answear, Learner, Takentest, Teacher
 from embed_video.admin import AdminVideoMixin
 
 

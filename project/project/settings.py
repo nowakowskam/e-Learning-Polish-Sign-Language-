@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     "embed_video",
     "elearn",
     "accounts",
+    "bootstrap5",
+    "bootstrap4",
+    "crispy_forms",
 ]
 
 MIDDLEWARE = [
@@ -116,20 +119,17 @@ USE_L10N = True
 
 USE_TZ = True
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'apps_static/'
+STATIC_URL = "/static/"
+STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = BASE_DIR / "apps_static/"
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
-
-
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 
 AUTH_USER_MODEL = "accounts.User"
-
-

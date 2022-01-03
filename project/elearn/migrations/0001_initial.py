@@ -12,61 +12,154 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('accounts', '0001_initial'),
+        ("accounts", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Learner',
+            name="Learner",
             fields=[
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to='accounts.user')),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        primary_key=True,
+                        serialize=False,
+                        to="accounts.user",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Lesson',
+            name="Lesson",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('url', embed_video.fields.EmbedVideoField(blank=True, null=True)),
-                ('name', models.CharField(max_length=80)),
-                ('auto_add', models.DateTimeField(auto_now_add=True)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("url", embed_video.fields.EmbedVideoField(blank=True, null=True)),
+                ("name", models.CharField(max_length=80)),
+                ("auto_add", models.DateTimeField(auto_now_add=True)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Test',
+            name="Test",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=80)),
-                ('lesson', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='elearn.lesson')),
-                ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=80)),
+                (
+                    "lesson",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="elearn.lesson"
+                    ),
+                ),
+                (
+                    "owner",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Teacher',
+            name="Teacher",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Takentest',
+            name="Takentest",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('learner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='TakenTest', to='elearn.learner')),
-                ('test', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='TakenTest', to='elearn.test')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "learner",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="TakenTest",
+                        to="elearn.learner",
+                    ),
+                ),
+                (
+                    "test",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="TakenTest",
+                        to="elearn.test",
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='learner',
-            name='tests',
-            field=models.ManyToManyField(through='elearn.Takentest', to='elearn.Test'),
+            model_name="learner",
+            name="tests",
+            field=models.ManyToManyField(through="elearn.Takentest", to="elearn.Test"),
         ),
         migrations.CreateModel(
-            name='Answear',
+            name="Answear",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('is_correct', models.BooleanField(default=False, verbose_name='Correct answear')),
-                ('test', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='elearn.test')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "is_correct",
+                    models.BooleanField(default=False, verbose_name="Correct answear"),
+                ),
+                (
+                    "test",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="elearn.test"
+                    ),
+                ),
             ],
         ),
     ]
