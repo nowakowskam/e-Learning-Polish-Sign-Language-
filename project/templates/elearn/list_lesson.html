@@ -6,22 +6,48 @@
 
 {% block content %}
 {% if user.is_authenticated %}
-    <h2 class="mb-5">Lista Lekcji</h2>
-        {% for item in videos %}
-            {% video item.url '426x240' %}
-        {% endfor %}
+
 <div class="container">
-  <div class="py-5">
-    <form method="GET" class="bootstrap4" enctype="multipart/form-data">
-      <fieldset class="form-group">
-        {% csrf_token %}
-        {{ form|crispy }}
-      </fieldset>
-      <button class="btn btn-primary btn-block text-white btn-user col-md-3" type="submit">Edytuj Lekcje</button>
-    </form>
-  </div>
+    <div class="py-5">
+
+        <div class="row border-bottom mb-4 pt-5">
+
+            <div class="lead col-md-6" style="font-size: 2rem;">Lista lekcji</div>
+            <div class="col-md-6">
+                {% if user.is_teacher %}
+                <a href="{% url 'create_lesson' %}">
+                    <button onClick=submit type="button" class="btn btn-danger float-right">Create Ticket</button>
+                </a>
+
+                {% endif %}
+            </div>
+        </div>
+        <table class="table">
+            <thead class="thead-light">
+            <tr class="text-center">
+                <th scope="col">ID</th>
+                <th scope="col">Lekcja</th>
+                <th scope="col">Miniatura</th>
+                <th scope="col">Opis</th>
+                <th scope="col">Dodana przez:</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="text-center">
+                {% for item in object_list %}
+                <th class="text-center" scope="row"><a
+                        href="{% url 'show_lesson' item.pk %}">{{ item.pk }}</a></th>
+                <td>{{ item.name }}</td>
+                <td><a href="{% url 'show_lesson' item.pk  %}">
+                    <img src="{{ item.miniature.url }}" width="300px" height="150"/></a></td>
+                <td>{{ item.description }}</td>
+                <td>{{ item.user.username }}</td>
+            </tr>
+            </tbody>
+            {% endfor %}
+
+        </table>
+    </div>
 </div>
-{% else %}
-<h3>Trzeba byc zalogowanym</h3>
 {% endif %}
 {% endblock %}

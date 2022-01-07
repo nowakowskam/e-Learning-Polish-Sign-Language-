@@ -8,6 +8,9 @@ class LessonForm(forms.ModelForm):
         fields = [
             "url",
             "name",
+            "description",
+            "miniature",
+            "course",
         ]
     def clean(self):
         data = self.cleaned_data
