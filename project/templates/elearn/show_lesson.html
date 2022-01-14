@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load embed_video_tags %}
+{% block title %}{{block.super}}Create_Lesson{% endblock %}
+
+{% block content %}
+
+        {{object.name}}
+
+    {{object.description}}
+    {% video object.url as my_video %}
+    {% video my_video "large" %}
+    {% endvideo %}
+
+<div class="container py-5">
+  <div class="content-section">
+    {% if form %}
+    <form method="GET" class="bootstrap4">
+      <fieldset class="form-group">
+        {% csrf_token %}
+        {{ form|crispy }}
+
+
+    <div class="px-3 mb-5">{% video object.url as my_video %}
+    {% video my_video "large" %}
+    </div>
+    {% endvideo %}
+                    <div class="d-flex justify-content-start">{{object.name}}
+          </div>
+           {{object.description}}
+      </fieldset>
+      <button class="btn btn-primary btn-block text-white btn-user" type="submit">Next page</button>
+    </form>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

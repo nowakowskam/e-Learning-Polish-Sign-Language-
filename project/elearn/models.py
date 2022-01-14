@@ -1,65 +1,63 @@
 from django.db import models
-
-# Create your models here.
-from django.contrib.auth.models import AbstractUser
+from accounts.models import User
 from django.db import models
 from embed_video.fields import EmbedVideoField
-
-
-class User(AbstractUser):
-    is_learner = models.BooleanField(default=True)
-    is_teacher = models.BooleanField(default=False)
-    is_admin = models.BooleanField(default=False)
-
-
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    profile_photo = models.ImageField(upload_to='', default='logo.jpg')
-    first_name = models.CharField(max_length=80, default='')
-    last_name = models.CharField(max_length=80, default='')
-    email = models.EmailField(default='')
-    birth_date = models.DateField(default='2000-01-01')
-    country = models.CharField(max_length=80, default='')
-
-    def __str__(self):
-        return self.user.username
+from django.urls import reverse
 
 
 class Lesson(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     url = EmbedVideoField(blank=True, null=True)
-    name = models.CharField(max_length=80)
+    name = models.CharField(max_length=80, verbose_name="Nazwa lekcji")
     auto_add = models.DateTimeField(auto_now_add=True)
+    miniature = models.ImageField(upload_to="profile", default="lekcja.png", verbose_name="Miniatura")
+    description = models.TextField(verbose_name="Opis", editable=True, default="", blank=True)
+    course = models.CharField(max_length=80, verbose_name="Kurs", default="", blank=True)
 
     def __str__(self):
         return str(self.name)
 
-    # class Meta:
-    #     ordering=['-auto_add']
-
+    def get_absolute_url(self):
+        return reverse('show_lesson', args=[str(self.id)])
 
 class Test(models.Model):
+    video = EmbedVideoField(blank=True, null=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=80)
+    name = models.CharField(max_length=80, verbose_name="nazwa testu")
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
-    # TODO description
-
-
-class Answear(models.Model):
-    test = models.ForeignKey(Test, on_delete=models.CASCADE)
-    is_correct = models.BooleanField("Correct answear", default=False)
+    image = models.ImageField(upload_to="tests", blank=True, verbose_name="Zdjęcie", default="")
+    question = models.TextField(verbose_name="Pytanie", editable=True, default="" )
+    option1 = models.CharField(max_length=200,null=True)
+    option2 = models.CharField(max_length=200,null=True)
+    option3 = models.CharField(max_length=200,null=True)
+    option4 = models.CharField(max_length=200,null=True)
+    answer = models.CharField(max_length=200,null=True)
 
     def __str__(self):
-        return self.name
+        return self.question
+
+    def get_absolute_url(self):  # new
+        return reverse('show_test', args=[str(self.id)])
+
+
+
+# class Answear(models.Model):
+#     test = models.ForeignKey(Test, on_delete=models.CASCADE)
+#     is_correct = models.BooleanField("Correct answear", default=False)
+#
+#     def __str__(self):
+#         return self.name
 
 
 class Learner(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    tests = models.ManyToManyField(Test, through='TakenTest')
+    tests = models.ManyToManyField(Test, through="TakenTest")
 
 
 class Takentest(models.Model):
-    learner = models.ForeignKey(Learner, on_delete=models.CASCADE, related_name="TakenTest")
+    learner = models.ForeignKey(
+        Learner, on_delete=models.CASCADE, related_name="TakenTest"
+    )
     test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name="TakenTest")
 
 

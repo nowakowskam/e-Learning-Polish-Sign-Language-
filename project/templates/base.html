@@ -1,0 +1,43 @@
+{% load static %}
+{% load bootstrap5 %}
+
+<!DOCTYPE html>
+<html>
+
+<title>{% block title %}	Migam - {% endblock %}</title>
+
+<head>
+	<meta charset="utf-8">
+	<link rel="shortcut icon" href="{% static 'logo.jpg' %}"/>
+	{% block extra_head %}
+	{% endblock %}
+</head>
+
+<body>
+{% include "navbar.html" %}
+{% if messages %}
+	{% for message in messages %}
+		<div class="alert alert-{{ message.tags }} mx-1">
+			{{ message }}
+		</div>
+	{% endfor %}
+{% endif %}
+
+{% block content %}
+{% endblock content %}
+{% block extra_body %}
+{% endblock extra_body %}
+</body>
+
+<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
+<link rel="stylesheet" href="{% static 'css/bootstrap5.css' %}"/>
+
+<script src="{% static 'js/jquery-3.2.1.slim.min.js' %}"></script>
+<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'js/js_bootstrap5.js' %}"></script>
+<script src="{% static 'js/popper.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+{% block script %}
+{% endblock script %}
+
+</html>
