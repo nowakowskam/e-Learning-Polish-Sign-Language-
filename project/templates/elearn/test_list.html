@@ -12,7 +12,7 @@
 
         <div class="row border-bottom mb-4 pt-5">
 
-            <div class="lead col-md-6" style="font-size: 2rem;">Lista lekcji</div>
+            <div class="lead col-md-6" style="font-size: 2rem;">Lista Testów</div>
             <div class="col-md-6">
                 {% if user.is_teacher %}
                 <a href="{% url 'create_lesson' %}">
@@ -26,10 +26,7 @@
             <thead class="thead-light">
             <tr class="text-center">
                 <th scope="col">ID</th>
-                <th scope="col">Lekcja</th>
-                <th scope="col">Miniatura</th>
-                <th scope="col">Opis</th>
-                <th scope="col">Dodana przez:</th>
+                <th scope="col">Test</th>
                 <th scope="col"></th>
             </tr>
             </thead>
@@ -37,15 +34,12 @@
             <tr class="text-center">
                 {% for item in object_list %}
                 <th class="text-center" scope="row"><a
-                        href="{% url 'show_lesson' item.pk %}">{{ item.pk }}</a></th>
+                        href="{% url 'show_test' item.pk %}">{{ item.pk }}</a></th>
                 <td>{{ item.name }}</td>
-                <td><a href="{% url 'show_lesson' item.pk  %}">
-                    <img src="{{ item.miniature.url }}" width="300px" height="150"/></a></td>
-                <td>{{ item.description }}</td>
-                <td>{{ item.user.username }}</td>
+
                 {% if user.is_superuser or user.is_teacher %}
-                <td><a href="{% url 'update_lesson' item.pk %}"><button type="button" class="btn btn-primary">Edytuj</button></a></td>
-                 <td><a href="{% url 'delete_lesson' item.pk %}"><button type="button" class="btn btn-danger">Usuń</button></a></td>
+                <td><a href="{% url 'update_test' item.pk %}"><button type="button" class="btn btn-primary">Edytuj</button></a></td>
+                 <td><a href="{% url 'delete_test' item.pk %}"><button type="button" class="btn btn-danger">Usuń</button></a></td>
 
                 {% endif %}
             </tr>
