@@ -18,12 +18,14 @@ from django.urls import path
 from django.urls import include
 from django.conf import settings
 from django.conf.urls.static import static
+from accounts import views
 from elearn import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("",views.index),
-    path("elearn/", include('elearn.urls'))
+    path("",views.index, name="index"),
+    path("elearn/", include('elearn.urls')),
+    path("accounts/", include('accounts.urls'))
 ]
 
 if settings.DEBUG:
