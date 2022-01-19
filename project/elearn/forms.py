@@ -69,7 +69,7 @@ class TestCreateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         test_owner = kwargs.pop('test_owner', None)
-        owner = User.objects.filter(pk=test_owner.pk).first() #TODO ???????????????
+        owner = User.objects.filter(pk=test_owner.pk).first()
         super().__init__(*args, **kwargs)
         self.fields['lesson'].queryset = Lesson.objects.filter(user=owner)
 

@@ -46,6 +46,8 @@ class ShowLessonView(DetailView):
 
         return context
 
+
+
     # def get_success_url(self, item):  # noqa: D102
     #     pk = self.item.pk
     #     return reverse_lazy('show_lesson', kwargs={'pk': pk})

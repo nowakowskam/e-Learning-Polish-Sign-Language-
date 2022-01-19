@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load embed_video_tags %}
+{% block title %}{{block.super}}Create_Lesson{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="container">
+  <div class="py-5">
+        {% csrf_token %}
+        {% if profile %}
+        <p>{{ profile.user }}</p>
+        <p>{{ profile.profile_photo }}</p>
+        <p>{{ profile.first_name }}</p>
+        <p>{{ profile.last_name }}</p>
+        <p>{{ profile.email }}</p>
+        <p>{{ profile.birth_date }}</p>
+        <p>{{ profile.bio }}</p>
+        <a href="{% url 'update_profile' profile.pk %}">
+            <button class="btn btn-primary btn-block text-white btn-user col-md-3">Edit profile</button>
+        </a>
+        {% else %}
+        You dont have a profile, create now!
+        <a href="{% url 'create_profile' %}">
+            <button class="btn btn-primary btn-block text-white btn-user col-md-3">Create profile</button>
+        </a>
+        {% endif %}
+
+  </div>
+</div>
+{% endif %}
+{% endblock %}

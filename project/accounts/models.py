@@ -16,7 +16,6 @@ class Profile(models.Model):
     last_name = models.CharField(max_length=80, default="")
     email = models.EmailField(default="")
     birth_date = models.DateField(default="2000-01-01")
-    country = models.CharField(max_length=80, default="")
-
+    bio = models.CharField(max_length=255, default="")
     def __str__(self):
         return self.user.username
