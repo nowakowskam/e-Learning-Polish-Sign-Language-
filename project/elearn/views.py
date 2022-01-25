@@ -36,6 +36,37 @@ class CreateLessonView(CreateView):
         form.cleaned_data
         return super().form_valid(form)
 
+class SolveTestView(DetailView):
+    model = Test
+    template_name = 'elearn/solve_test.html'
+
+    def getQuerySetOfTests(self, lesson):
+        return Test.objects.filter(lesson=lesson)
+
+    def getNextTestPk(self, expected_test_pk, lesson):
+        test_queryset = self.getQuerySetOfTests(lesson)
+        print(test_queryset)
+        found_current_test = False
+
+        for item in test_queryset:
+            if found_current_test:
+                return item
+            if item.pk == expected_test_pk:
+                found_current_test = True
+
+    def get_context_data(self, **kwargs):
+        context = super(SolveTestView, self).get_context_data(**kwargs)
+        lesson = self.object.lesson
+        item = self.getNextTestPk(
+            expected_test_pk=self.object.pk,
+            lesson=lesson,
+        )
+
+        context['next_question']=item
+
+        return context
+
+
 class ShowLessonView(DetailView):
     model = Lesson
     template_name = 'elearn/show_lesson.html'
@@ -50,7 +81,6 @@ class ShowLessonView(DetailView):
             user=User.objects.filter(
                 pk=self.request.user.pk
             ).first())
-        print(context['profile_exists'])
 
         if 'comment_form' not in context:
             context['comment_form'] = [
@@ -66,6 +96,9 @@ class ShowLessonView(DetailView):
             ]
             context['new_comment_form'] = self.comment_form()
             print(context['profile_form'])
+
+        if 'test_form' not in context:
+            context['test_form'] = Test.objects.filter(lesson=self.object).values('pk').first() #znajduje wszystkie testy przypisane do lekcji i selekcjonuje tylko ta pierwsza
         return context
 
 
@@ -255,7 +288,6 @@ class DeleteTestView(DeleteView):
 class ShowTestView(DetailView):
     model = Test
     template_name = 'elearn/show_test.html'
-
 
 
 

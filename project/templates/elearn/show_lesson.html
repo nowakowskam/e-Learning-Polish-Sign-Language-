@@ -68,4 +68,7 @@
     Nie masz zalozonego konta, zaloz je jezeli chcesz dodawac komentarze! <a href="{% url 'register' %}">Kliknij tutaj!</a>
     {% endif %}
 </form>
+{% if test_form %}
+<a href="{% url 'solve_test' test_form.pk %}">Rozwiaz test {{ test_form.pk }}</a></th>
+{% endif %}
 {% endblock %}

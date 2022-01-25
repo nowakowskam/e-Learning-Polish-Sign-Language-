@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}{{block.super}}Create_Lesson{% endblock %}
+{% load embed_video_tags %}
+
+{% block content %}
+{% if object.video %}
+<div class="container py-5">
+  <div class="content-section">
+    {% if form %}
+    <form method="GET" class="bootstrap4">
+      <fieldset class="form-group">
+        {% csrf_token %}
+    {% video object.video as my_video %}
+    {% video my_video "large" %}
+    {% endvideo %}
+{% else %}
+
+{% endif %}
+          {% endif %}
+<html>
+<head>
+    <title>Test</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+    <script>
+    $(document).ready(function(){
+    $("#b1").click(function(){
+        $(".rb").show();
+        $(".rb").attr("disabled",true);
+
+
+    });
+    });
+
+
+        function getanswers()
+        {
+        document.getElementById("UserAnswers").innerHTML = "";
+        var e = document.getElementsByTagName("input");
+            for(i = 0 ; i<=e.length;i++)
+            {
+                if(e[i].type=="radio")
+                {
+                    if(e[i].checked)
+                    {
+                        document.getElementById("UserAnswers").innerHTML+="Q "+e[i].name + " The Answers You Are Selected Is : "+e[i].value+"<br>";
+
+                    }
+                }
+            }
+        }
+    </script>
+
+
+</head>
+<body>
+<div class="container">
+    <h1 class="text-danger mt-3">TEST</h1>
+    <hr>
+    <div>
+        <table>
+            <tr>
+                <td class="text-primary">{{object.id}} ) {{object}} ?</td>
+            </tr>
+            <tr>
+                {% if object.image %}
+               <img src="{{ object.image.url }}" width="300px" height="150"/>
+                {% else %}
+                    {% video object.video as my_video %}
+                    {% video my_video "400x300" %}
+                    {% endvideo %}
+                {% endif %}
+            </tr>
+
+            <tr>
+                <td><input type = "radio" class="rb" name = {{object.id}} id="option1" value="{{object.option1}}">{{object.option1}}</td>
+            </tr>
+            <tr>
+                <td><input type = "radio" class="rb" name = {{object.id}} id="option2" value="{{object.option2}}">{{object.option2}}</td>
+            </tr>
+            <tr>
+                <td><input type = "radio" class="rb" name = {{object.id}} id="option3" value="{{object.option3}}">{{object.option3}}</td>
+            </tr>
+            <tr>
+                <td><input type = "radio" class="rb" name = {{object.id}} id="option4" value="{{object.option4}}">{{object.option4}}</td>
+            </tr>
+
+            <tr>
+                <td><label id="answer" class= "rb" style="display:none ; color : green"><b>{{object.answer}}</b></label></td>
+            </tr>
+
+        </table>
+<hr>
+
+        <input type="submit" class="btn btn-success" value="Submit" id="b1" onclick="getanswers()">
+        <br>
+
+        {% if next_question %}
+        <a href="{% url 'solve_test' next_question.pk %}"><button type="button" class="btn btn-danger">Kolejne pytanie</button></a>
+        {% else %}
+        Pytania sie skonczyly! Przejdz do kolejnej lekcji-><a href="{% url 'list_lesson' %}">KLIK!</a>
+        {% endif %}
+
+        <b id="UserAnswers"></b>
+        </div>
+</div>
+</body>
+</html>
+ 	{% endblock %}
