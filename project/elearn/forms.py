@@ -1,5 +1,5 @@
 from django import forms
-from .models import Lesson, Test, Learner, Takentest, Teacher
+from .models import Lesson, Test, Learner, Takentest, Teacher,Comment
 from accounts.models import User
 
 
@@ -86,4 +86,12 @@ class ShowTestForm(forms.ModelForm):
                   'option4',
                   'answer',
                   'lesson']
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = [
+            "body",
+        ]
+
 

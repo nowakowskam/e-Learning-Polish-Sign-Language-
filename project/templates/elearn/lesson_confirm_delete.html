@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load embed_video_tags %}
+{% block title %}{{block.super}}Create_Lesson{% endblock %}
+
+{% block content %}
+<form action="" method='POST'>
+    {%csrf_token%}
+    <h4>Na pewno chcesz usunąć "{{object}}"?</h4>
+    <p><input type ="submit" value = "Confirm"></p>
+    <p><a href="{% url 'list_lesson'%}">Cancel</a></p>
+</form>
+{% endblock %}

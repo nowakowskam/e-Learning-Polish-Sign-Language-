@@ -4,12 +4,14 @@ from django.db import models
 from embed_video.fields import EmbedVideoField
 from django.urls import reverse
 
+class Category(models.Model):
+    name = models.CharField(max_length=80, verbose_name="Kurs", default="", blank=True)
 
 class Lesson(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     url = EmbedVideoField(blank=True, null=True)
     name = models.CharField(max_length=80, verbose_name="Nazwa lekcji")
-    auto_add = models.DateTimeField(auto_now_add=True)
+    create_date = models.DateTimeField(auto_now_add=True)
     miniature = models.ImageField(upload_to="profile", default="lekcja.png", verbose_name="Miniatura")
     description = models.TextField(verbose_name="Opis", editable=True, default="", blank=True)
     course = models.CharField(max_length=80, verbose_name="Kurs", default="", blank=True)
@@ -19,6 +21,9 @@ class Lesson(models.Model):
 
     def get_absolute_url(self):
         return reverse('show_lesson', args=[str(self.id)])
+
+    class Meta:
+        ordering = ['create_date']
 
 class Test(models.Model):
     video = EmbedVideoField(blank=True, null=True)
@@ -47,7 +52,17 @@ class Test(models.Model):
 #
 #     def __str__(self):
 #         return self.name
+class Comment(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    create_date = models.DateTimeField(auto_now_add=True)
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    body = models.TextField(max_length=512)
 
+    class Meta:
+        ordering = ['create_date']
+
+    def __str__(self) -> str:  # noqa: D105
+        return f'ID{self.id}:Lesson-{self.lesson.id}:{self.owner}'
 
 class Learner(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
@@ -59,6 +74,7 @@ class Takentest(models.Model):
         Learner, on_delete=models.CASCADE, related_name="TakenTest"
     )
     test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name="TakenTest")
+
 
 
 class Teacher(models.Model):

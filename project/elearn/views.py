@@ -13,15 +13,16 @@ from django.urls import reverse_lazy
 from django.urls import reverse
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseRedirect
-from .forms import LessonForm, TestCreateForm, ShowTestForm
+from .forms import LessonForm, TestCreateForm, CommentForm
 from accounts.models import User
+from accounts.models import Profile
+from .models import Comment
+from django.shortcuts import redirect
 
 
 from django.shortcuts import get_object_or_404
 from .models import Lesson, Test, Learner, Takentest, Teacher
 
-# Create your views here.
-# utworz lekcje
 class CreateLessonView(CreateView):
     form_class = LessonForm or None
     template_name ='elearn/create_lesson.html'
@@ -30,7 +31,7 @@ class CreateLessonView(CreateView):
         form.instance.user_id=self.request.user.pk
 
         form.save()
-        self.success_url=reverse_lazy('create_lesson', kwargs={'pk': form.instance.id})
+        self.success_url=reverse_lazy('show_lesson', kwargs={'pk': form.instance.id})
         messages.success(self.request, 'Lesson Created succesfully.')
         form.cleaned_data
         return super().form_valid(form)
@@ -38,13 +39,57 @@ class CreateLessonView(CreateView):
 class ShowLessonView(DetailView):
     model = Lesson
     template_name = 'elearn/show_lesson.html'
+    comment_form = CommentForm
 
     def get_context_data(self, **kwargs):
         context = super(ShowLessonView, self).get_context_data(**kwargs)
         lesson = Lesson.objects.filter(pk=self.object.pk)
         context['lesson'] = lesson
 
+        context['profile_exists']= Profile.objects.filter(
+            user=User.objects.filter(
+                pk=self.request.user.pk
+            ).first())
+        print(context['profile_exists'])
+
+        if 'comment_form' not in context:
+            context['comment_form'] = [
+                i for i in Comment.objects.filter(lesson=self.object).values(
+                    'pk', 'body', 'create_date', 'owner_id')
+            ]
+            context['new_comment_form'] = self.comment_form()
+
+        if 'profile_form' not in context:
+            context['profile_form'] = [
+                i for i in Profile.objects.all().values(
+                    'user', 'profile_photo', 'first_name', 'last_name')
+            ]
+            context['new_comment_form'] = self.comment_form()
+            print(context['profile_form'])
         return context
+
+
+    def create_comment(self, user, lesson, comment_body):
+        comment = Comment(
+            owner=user,
+            lesson=lesson,
+            body=comment_body,
+        )
+        comment.save()
+        return comment
+
+    def post(self, request, *args, **kwargs):
+        lesson_pk = self.kwargs['pk']
+        lesson = get_object_or_404(Lesson, pk=lesson_pk)
+        user = request.user
+        comment_body = request.POST['body']
+        self.create_comment(user,lesson, comment_body)
+
+        messages.success(self.request, 'Komentarz pomyslnie dodany.')
+
+        return redirect(reverse_lazy('show_lesson', kwargs={'pk': lesson_pk}))
+
+    #TODO dodac uzytwkonika link do profilu i nazwe
 
 
 
@@ -90,10 +135,25 @@ class ListLessonView(ListView):
 
 class LessonDeleteView(DeleteView):
     model = Lesson
-    success_url = reverse_lazy('/elearn/delete_lesson/')
+    template_name = 'elearn/lesson_confirm_delete.html'
+    form = LessonForm
 
+    def get_object(self):
+        pk = self.kwargs.get("pk")
+        return get_object_or_404(Lesson, pk = pk)
 
-# utworz test
+    def get_success_url(self):
+        return reverse('list_lesson')
+
+    def delete(self, request, *args, **kwargs):
+            self.object = self.get_object()
+            if self.object.user == request.user:
+                success_url = self.get_success_url()
+                self.object.delete()
+                return http.HttpResponseRedirect(success_url)
+            else:
+                return http.HttpResponseForbidden("Możesz usunać tylko swoją lekcje")
+
 
 
 class CreateTestView(CreateView):
@@ -109,7 +169,7 @@ class CreateTestView(CreateView):
             form.instance.answer = form.instance.option2
         if form.instance.answer == 'option3':
             form.instance.answer = form.instance.option3
-        else:
+        elif form.instance.answer == 'option4':
             form.instance.answer = form.instance.option4
 
         form.save()
@@ -144,15 +204,32 @@ class TestListView(ListView):
 # zmien test
 class UpdateTestView(UpdateView):
     model = Test
-    form_class = ShowTestForm
+    form_class = TestCreateForm
     template_name = 'elearn/update_test.html'
 
+    def get_form_kwargs(self):  # noqa: D102
+        kwargs = super().get_form_kwargs()
+        kwargs.update(
+            {
+                'test_owner': self.request.user,
+            },
+        )
+        return kwargs
+
     def form_valid(self, form):
+        if form.instance.answer == 'option1':
+            form.instance.answer = form.instance.option1
+        if form.instance.answer == 'option2':
+            form.instance.answer = form.instance.option2
+        if form.instance.answer == 'option3':
+            form.instance.answer = form.instance.option3
+        elif form.instance.answer == 'option4':
+            form.instance.answer = form.instance.option4
         form.save()
         messages.success(self.request, 'Zmiany zostały zapisane.')
         return super().form_valid(form)
 
-# pokaz testy
+
 class DeleteTestView(DeleteView):
     model = Test
     template_name = 'elearn/test_confirm_delete.html'
@@ -171,7 +248,7 @@ class DeleteTestView(DeleteView):
                 self.object.delete()
                 return http.HttpResponseRedirect(success_url)
             else:
-                return http.HttpResponseForbidden("Możesz usunać tylko swoją lekcje")
+                return http.HttpResponseForbidden("Możesz usunać tylko swój test")
 
 
 
@@ -179,12 +256,7 @@ class ShowTestView(DetailView):
     model = Test
     template_name = 'elearn/show_test.html'
 
-    # def get_context_data(self, **kwargs):
-    #     context = super(ShowTestView, self).get_context_data(**kwargs)
-    #     test = Test.objects.filter(pk=self.object.pk)
-    #     context['test'] = test
-    #
-    #     return context
+
 
 
 def index(request):

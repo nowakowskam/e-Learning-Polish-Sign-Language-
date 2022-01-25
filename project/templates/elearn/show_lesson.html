@@ -6,33 +6,66 @@
 
 {% block content %}
 
-        {{object.name}}
+{{object.name}}
 
-    {{object.description}}
-    {% video object.url as my_video %}
-    {% video my_video "large" %}
-    {% endvideo %}
+{{object.description}}
+{% video object.url as my_video %}
+{% video my_video "large" %}
+{% endvideo %}
 
 <div class="container py-5">
-  <div class="content-section">
-    {% if form %}
-    <form method="GET" class="bootstrap4">
-      <fieldset class="form-group">
-        {% csrf_token %}
-        {{ form|crispy }}
+    <div class="content-section">
+        {% if form %}
+        <form method="GET" class="bootstrap4">
+            <fieldset class="form-group">
+                {% csrf_token %}
+                {{ form|crispy }}
 
 
-    <div class="px-3 mb-5">{% video object.url as my_video %}
-    {% video my_video "large" %}
+                <div class="px-3 mb-5">{% video object.url as my_video %}
+                    {% video my_video "510x210" %}
+                </div>
+                {% endvideo %}
+                <div class="d-flex justify-content-start">{{object.name}}
+                </div>
+                {{object.description}}
+            </fieldset>
+            <button class="btn btn-primary btn-block text-white btn-user" type="submit">Next page</button>
+
+
+        </form>
+
+        {% endif %}
     </div>
-    {% endvideo %}
-                    <div class="d-flex justify-content-start">{{object.name}}
-          </div>
-           {{object.description}}
-      </fieldset>
-      <button class="btn btn-primary btn-block text-white btn-user" type="submit">Next page</button>
-    </form>
-    {% endif %}
-  </div>
 </div>
+
+
+{% for comment in comment_form %}
+{% for profile in profile_form %}
+<div class="comments" style="padding: 10px;">
+    <p class="font-weight-bold">
+        {{ comment.body }}
+        <span class=" text-muted font-weight-normal">
+              {{ comment.create_date }}
+            {% if comment.owner_id == profile.user %}
+            {{ profile.first_name }}
+            {{ profile.last_name }}
+            {{ profile.profile_photo }}
+            {% endif %}
+            </span>
+    </p>
+</div>
+{% endfor %}
+{% endfor %}
+
+{% if profile_exists %}
+<form method="POST" class="bootstrap4" enctype="multipart/form-data">{% csrf_token %}
+    {{ new_comment_form }}
+    <button class="btn btn-primary btn-block text-white btn-user col-md-2" type="submit">Submit</button>
+    {% elif user.is_authenticated %}
+    Nie masz profilu, zaloz go jezeli chcesz dodac komentarze. <a href="{% url 'create_profile' %}">Kliknij tutaj!</a>
+    {% else %}
+    Nie masz zalozonego konta, zaloz je jezeli chcesz dodawac komentarze! <a href="{% url 'register' %}">Kliknij tutaj!</a>
+    {% endif %}
+</form>
 {% endblock %}
