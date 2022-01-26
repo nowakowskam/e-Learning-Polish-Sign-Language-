@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Lesson, Test, Learner, Takentest, Teacher, Comment
+from .models import Lesson, Test, Learner, Takentest, Teacher, Comment, Category
 from embed_video.admin import AdminVideoMixin
 
 
@@ -14,3 +14,4 @@ admin.site.register(Lesson, LessonVideo)
 admin.site.register(Takentest)
 admin.site.register(Test)
 admin.site.register(Comment)
+admin.site.register(Category)

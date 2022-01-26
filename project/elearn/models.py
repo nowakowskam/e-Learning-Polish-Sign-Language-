@@ -5,7 +5,7 @@ from embed_video.fields import EmbedVideoField
 from django.urls import reverse
 
 class Category(models.Model):
-    name = models.CharField(max_length=80, verbose_name="Kurs", default="", blank=True)
+    name = models.CharField(max_length=80, verbose_name="Kurs", default="", blank=True, null=True)
 
 class Lesson(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -14,7 +14,7 @@ class Lesson(models.Model):
     create_date = models.DateTimeField(auto_now_add=True)
     miniature = models.ImageField(upload_to="profile", default="lekcja.png", verbose_name="Miniatura")
     description = models.TextField(verbose_name="Opis", editable=True, default="", blank=True)
-    course = models.CharField(max_length=80, verbose_name="Kurs", default="", blank=True)
+    course = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return str(self.name)

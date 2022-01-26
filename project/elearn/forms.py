@@ -1,5 +1,5 @@
 from django import forms
-from .models import Lesson, Test, Learner, Takentest, Teacher,Comment
+from .models import Lesson, Test, Learner, Takentest, Teacher,Comment, Category
 from accounts.models import User
 
 
@@ -9,7 +9,7 @@ class LessonForm(forms.ModelForm):
     url = forms.URLField(required=False)
     name = forms.CharField()
     description= forms.CharField(widget=forms.Textarea)
-    course= forms.CharField()
+    course= forms.ModelChoiceField(widget=forms.Select, queryset=Category.objects.none())
 
 
 
