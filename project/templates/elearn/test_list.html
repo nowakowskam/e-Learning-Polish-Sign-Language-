@@ -6,48 +6,65 @@
 
 {% block content %}
 {% if user.is_authenticated %}
+{% if user.is_superuser or user.is_teacher %}
+
 
 <div class="container">
     <div class="py-5">
-
         <div class="row border-bottom mb-4 pt-5">
-
-            <div class="lead col-md-6" style="font-size: 2rem;">Lista Testów</div>
-            <div class="col-md-6">
-                {% if user.is_teacher %}
-                <a href="{% url 'create_lesson' %}">
-                    <button onClick=submit type="button" class="btn btn-danger float-right">Create Ticket</button>
-                </a>
-
-                {% endif %}
-            </div>
+            <div class="lead col-md-6" style="font-size: 2rem;">Lista lekcji</div>
         </div>
-        <table class="table">
+        <table class="table fw-light">
             <thead class="thead-light">
             <tr class="text-center">
-                <th scope="col">ID</th>
-                <th scope="col">Test</th>
-                <th scope="col"></th>
+                <th scope="col" width="5%">ID</th>
+                <th scope="col" width="15%">Nazwa testu</th>
+                <th scope="col" width="26%">Nazwa lekcji</th>
+                <th scope="col" width="10%">Dodana przez</th>
+                <th scope="col" width="15%">Akcje</th>
             </tr>
             </thead>
             <tbody>
-            <tr class="text-center">
-                {% for item in object_list %}
-                <th class="text-center" scope="row"><a
-                        href="{% url 'show_test' item.pk %}">{{ item.pk }}</a></th>
-                <td>{{ item.name }}</td>
+            {% for item in object_list %}
+            <tr class="text-center align-middle">
 
-                {% if user.is_superuser or user.is_teacher %}
-                <td><a href="{% url 'update_test' item.pk %}"><button type="button" class="btn btn-primary">Edytuj</button></a></td>
-                 <td><a href="{% url 'delete_test' item.pk %}"><button type="button" class="btn btn-danger">Usuń</button></a></td>
+                <th class="text-center" scope="row">
+                    <a href="{% url 'show_test' item.pk %}">{{ item.pk }}</a>
+                </th>
 
-                {% endif %}
+                <td>
+                    {{ item.name }}
+                </td>
+
+                <td>
+                    {{ item.lesson }}
+                </td>
+
+                <td>
+                    {{ item.owner }}
+                </td>
+
+                <td>
+                    <table class="table align-middle">
+                        <td class="pt-4" style="border: none;">
+                            <a href="{% url 'update_test' item.pk %}">
+                                <button type="button" class="btn btn-primary">Edytuj</button>
+                            </a>
+                        </td>
+                        <td class="pt-4" style="border: none;">
+                            <a href="{% url 'delete_test' item.pk %}">
+                                <button type="button" class="btn btn-danger">Usuń</button>
+                            </a>
+                        </td>
+                    </table>
+                </td>
+
             </tr>
             </tbody>
             {% endfor %}
-
         </table>
     </div>
 </div>
+{% endif %}
 {% endif %}
 {% endblock %}

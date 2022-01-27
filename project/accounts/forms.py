@@ -24,6 +24,7 @@ class ProfileForm(forms.ModelForm):
         "first_name",
         "last_name",
         "email",
+        "bio",
         "birth_date",
         ]
         widgets = {

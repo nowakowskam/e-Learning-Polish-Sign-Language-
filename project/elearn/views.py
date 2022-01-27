@@ -27,6 +27,14 @@ class CreateLessonView(CreateView):
     form_class = LessonForm or None
     template_name ='elearn/create_lesson.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(CreateLessonView, self).get_context_data(**kwargs)
+        context['profile_exists'] = Profile.objects.filter(
+            user=User.objects.filter(
+                pk=self.request.user.pk
+            ).first())
+        return context
+
     def form_valid(self, form):
         form.instance.user_id=self.request.user.pk
 
@@ -45,7 +53,6 @@ class SolveTestView(DetailView):
 
     def getNextTestPk(self, expected_test_pk, lesson):
         test_queryset = self.getQuerySetOfTests(lesson)
-        print(test_queryset)
         found_current_test = False
 
         for item in test_queryset:
@@ -86,7 +93,7 @@ class ShowLessonView(DetailView):
             context['comment_form'] = [
                 i for i in Comment.objects.filter(lesson=self.object).values(
                     'pk', 'body', 'create_date', 'owner_id')
-            ]
+            ][::-1]
             context['new_comment_form'] = self.comment_form()
 
         if 'profile_form' not in context:
@@ -95,10 +102,18 @@ class ShowLessonView(DetailView):
                     'user', 'profile_photo', 'first_name', 'last_name')
             ]
             context['new_comment_form'] = self.comment_form()
-            print(context['profile_form'])
 
         if 'test_form' not in context:
             context['test_form'] = Test.objects.filter(lesson=self.object).values('pk').first() #znajduje wszystkie testy przypisane do lekcji i selekcjonuje tylko ta pierwsza
+
+        if 'lesson_creator' not in context:
+            context['lesson_creator'] = Profile.objects.filter(
+                user=Lesson.objects.filter(pk=self.object.pk).first().user
+            ).first()
+
+        if 'list_test_form' not in context:
+            context['list_test_form'] = Test.objects.filter(lesson=self.object).values('pk', 'name') #znajduje wszystkie testy przypisane do lekcji i selekcjonuje tylko ta pierwsza
+
         return context
 
 

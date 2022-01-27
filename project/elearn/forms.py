@@ -1,18 +1,15 @@
 from django import forms
-from .models import Lesson, Test, Learner, Takentest, Teacher,Comment, Category
+from .models import Lesson, Test, Learner, Takentest, Teacher,Comment
+# from .models import Category
 from accounts.models import User
-
 
 class LessonForm(forms.ModelForm):
 
     miniature = forms.ImageField(required=False)
-    url = forms.URLField(required=False)
+    url = forms.URLField(required=True)
     name = forms.CharField()
-    description= forms.CharField(widget=forms.Textarea)
-    course= forms.ModelChoiceField(widget=forms.Select, queryset=Category.objects.none())
-
-
-
+    description = forms.CharField(widget=forms.Textarea)
+    # course= forms.ModelChoiceField(widget=forms.Select, queryset=Category.objects.none())
     class Meta:
         model = Lesson
         fields = [
@@ -20,26 +17,16 @@ class LessonForm(forms.ModelForm):
             "name",
             "description",
             "miniature",
-            "course",
+            # "course",
         ]
-        labels = {
-            'miniature': 'Miniatura',
-            'url': 'Url',
-            'name': 'Nazwa lekcji',
-            'description': "Opis",
-            'course': 'Kurs',
-        }
-    # def clean(self):
-    #     data = self.cleaned_data
-    #     url = data.get('url')
-    #     name = data.get('name')
+
     def __init__(self, *args, **kwargs):
         super(LessonForm, self).__init__(*args, **kwargs)
-        self.fields['miniature'].label = "Miniatura"
-        self.fields['url'].label = "URL"
+        self.fields['miniature'].label = "Miniaturka lekcji"
+        self.fields['url'].label = "Adres internetowy do wideo"
         self.fields['name'].label = "Nazwa lekcji"
         self.fields['description'].label = "Opis"
-        self.fields['course'].label = "Kurs"
+        # self.fields['course'].label = "Kurs"
 
 
 class TestCreateForm(forms.ModelForm):
@@ -88,10 +75,14 @@ class ShowTestForm(forms.ModelForm):
                   'lesson']
 
 class CommentForm(forms.ModelForm):
+    body = forms.CharField(label="", widget=forms.Textarea(attrs={'name':'body', 'rows':'4', 'cols':'30'}))
     class Meta:
         model = Comment
         fields = [
             "body",
         ]
+        labels = {
+            'body': '',
+        }
 
 
