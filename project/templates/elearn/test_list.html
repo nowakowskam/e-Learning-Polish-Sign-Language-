@@ -12,13 +12,13 @@
 <div class="container">
     <div class="py-5">
         <div class="row border-bottom mb-4 pt-5">
-            <div class="lead col-md-6" style="font-size: 2rem;">Lista lekcji</div>
+            <div class="lead col-md-6" style="font-size: 2rem;">Lista pytań</div>
         </div>
         <table class="table fw-light">
             <thead class="thead-light">
             <tr class="text-center">
                 <th scope="col" width="5%">ID</th>
-                <th scope="col" width="15%">Nazwa testu</th>
+                <th scope="col" width="15%">Nazwa pytania</th>
                 <th scope="col" width="26%">Nazwa lekcji</th>
                 <th scope="col" width="10%">Dodana przez</th>
                 <th scope="col" width="15%">Akcje</th>
@@ -52,9 +52,16 @@
                             </a>
                         </td>
                         <td class="pt-4" style="border: none;">
-                            <a href="{% url 'delete_test' item.pk %}">
-                                <button type="button" class="btn btn-danger">Usuń</button>
-                            </a>
+
+                            <form action="{% url 'delete_test' item.pk %}" method="post" style="display: inline;" onsubmit="window.mytest()">
+                                {% csrf_token %}
+                                <input type="hidden"/>
+                                <button type="submit" class="btn btn-danger">Usuń</button>
+                            </form>
+                            <script type="text/javascript">
+                                window.mytest = function() { var isValid = confirm('Czy jesteś tego pewien ?');if (!isValid) { event.preventDefault();  alert("Anulowano usuwanie.");}}
+                            </script>
+
                         </td>
                     </table>
                 </td>
