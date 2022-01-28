@@ -1,5 +1,5 @@
 from django import forms
-from .models import Lesson, Test, Learner, Takentest, Teacher,Comment
+from .models import Lesson, Test ,Comment
 # from .models import Category
 from accounts.models import User
 

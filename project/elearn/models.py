@@ -44,14 +44,6 @@ class Test(models.Model):
     def get_absolute_url(self):  # new
         return reverse('show_test', args=[str(self.id)])
 
-
-
-# class Answear(models.Model):
-#     test = models.ForeignKey(Test, on_delete=models.CASCADE)
-#     is_correct = models.BooleanField("Correct answear", default=False)
-#
-#     def __str__(self):
-#         return self.name
 class Comment(models.Model):
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     create_date = models.DateTimeField(auto_now_add=True)
@@ -64,18 +56,4 @@ class Comment(models.Model):
     def __str__(self) -> str:  # noqa: D105
         return f'ID{self.id}:Lesson-{self.lesson.id}:{self.owner}'
 
-class Learner(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    tests = models.ManyToManyField(Test, through="TakenTest")
 
-
-class Takentest(models.Model):
-    learner = models.ForeignKey(
-        Learner, on_delete=models.CASCADE, related_name="TakenTest"
-    )
-    test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name="TakenTest")
-
-
-
-class Teacher(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
