@@ -1,18 +1,11 @@
-import profile
-
-import requests
-
 from .forms import UserRegisterForm
-from django.conf import settings
-from django.views.generic.edit import CreateView
 from django.contrib.auth import login
-from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, UpdateView
 from django.contrib import messages
 from .forms import ProfileForm
 from .models import User, Profile
-from django.shortcuts import get_object_or_404, Http404
+
 
 class SignUp(CreateView):
     form_class = UserRegisterForm
@@ -68,11 +61,6 @@ class ProfileUpdateView(UpdateView):
     template_name = 'accounts/update_profile.html'
     model=Profile
 
-    # def get_object(self, **kwargs):
-    #     username = self.kwargs.get("username")
-    #     if username is None:
-    #         raise Http404
-    #     return get_object_or_404(Profile, user__username__iexact=username)
     def form_valid(self, form):
         form.instance.user = User.objects.filter(pk=self.request.user.pk).first()
         form.save()
