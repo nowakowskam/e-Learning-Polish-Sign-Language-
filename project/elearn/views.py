@@ -3,7 +3,7 @@ from django.views.generic.edit import CreateView
 from django.views.generic.edit import FormView
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
-from django.views.generic import DetailView
+from django.views.generic import DetailView, TemplateView
 from django.views.generic import DeleteView
 from django import http
 from django.contrib import messages
@@ -16,6 +16,7 @@ from .models import Comment
 from django.shortcuts import redirect
 import os
 from django.conf import settings
+from django.core.paginator import Paginator
 
 from django.shortcuts import get_object_or_404
 from .models import Lesson, Test
@@ -45,8 +46,10 @@ class SolveTestView(DetailView):
     model = Test
     template_name = 'elearn/solve_test.html'
 
+
     def getQuerySetOfTests(self, lesson):
         return Test.objects.filter(lesson=lesson)
+
 
     def getNextTestPk(self, expected_test_pk, lesson):
         test_queryset = self.getQuerySetOfTests(lesson)
@@ -73,6 +76,7 @@ class SolveTestView(DetailView):
 class SolveTestListView(ListView):
     model = Test
     template_name = 'elearn/solve_test_list.html'
+    paginate_by = 5
 
     def get_context_data(self, **kwargs):
         context = super(SolveTestListView, self).get_context_data(**kwargs)
@@ -245,6 +249,7 @@ class TestListView(ListView):
     template_name = 'test_list'
     paginate_by = 5
     model = Test
+
     def get_success_url(self):  # noqa: D102
         qs=self.model.objects.all()
         return qs
@@ -314,10 +319,4 @@ class ShowTestView(DetailView):
 def index(request):
     dane = {'title' : 'About'}
     return render(request, 'base.html',dane)
-
-from django.shortcuts import render
-
-def error_404(request, exception):
-        data = {}
-        return render(request,'elearn/404.html', data)
 

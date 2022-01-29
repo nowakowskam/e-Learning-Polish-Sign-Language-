@@ -11,5 +11,4 @@ path('update_profile/<int:pk>/', login_required(views.ProfileUpdateView.as_view(
 path('show_profile/', login_required(views.ShowProfileView.as_view()), name='show_profile'),
 path('create_profile/', login_required(views.CreateProfileView.as_view()), name='create_profile')
 ]
-handler404 = 'accounts.views.error_404'
 

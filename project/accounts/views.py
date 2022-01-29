@@ -78,10 +78,14 @@ class ProfileUpdateView(UpdateView):
 
 from django.shortcuts import render
 
-def error_404(request, exception):
-        data = {}
-        return render(request,'accounts/404.html', data)
+def error_404(request, exception, template_name="accounts/404.html"):
+    context = {}
+    response = render(request, template_name=template_name, context=context)
+    response.status_code = 404
+    return response
 
-def error_500(request,  exception):
-        data = {}
-        return render(request,'accounts/500.html', data)
+def error_500(request, template_name="accounts/500.html"):
+    context = {}
+    response = render(request, template_name=template_name, context=context)
+    response.status_code = 500
+    return response
