@@ -2,21 +2,13 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% load embed_video_tags %}
-{% block title %}{{block.super}}Create_Lesson{% endblock %}
+{% block title %}{{block.super}}Lekcja {{ object.id }}{% endblock %}
 
 {% block extra_head %}
 <style>
 html, body {
     height:100vh;
 }
-
-
-
-
-
-
-
-
 
 </style>
 {% endblock %}
@@ -82,11 +74,11 @@ html, body {
 
             {% for comment in comment_form %} <!-- comments feature -->
             {% for profile in profile_form %}
+            {% if comment.owner_id == profile.user %}
             <table>
-                {% if comment.owner_id == profile.user %}
                 <tr>
                     <td rowspan="2" class="pe-2">
-                        <img src="{% static profile.profile_photo %}" width="75vh" height="75vh"/>
+                        <img src="{% static User.profile.profile_photo.url %}" width="75vh" height="75vh"/>
                     </td>
                     <td><span class="fw-light"
                               style="font-size:1.6vh">{{ profile.first_name }} {{ profile.last_name }} </span><span
@@ -102,6 +94,11 @@ html, body {
             {% endfor %}
             {% endfor %}
 
+
+            {% if not comment_form %}
+            <div class="fw-light" style="font-size:1.7vh">Nie dodano jeszcze żadnego komentarza.</div>
+            {% endif %}
+
         </div>
 
 
@@ -113,11 +110,10 @@ html, body {
                 Profil nauczyciela
             </p>
 
-
             <table class="mb-3"> <!-- Teacher profile -->
                 <tr>
                     <td rowspan="2" class="pe-4">
-                        <img src="{% static lesson_creator.profile_photo %}" width="125vh" height="125vh"/>
+                        <img src="{{ lesson_creator.profile_photo.url }}" width="125vh" height="125vh"/>
                     </td>
                     <td><span class="fw-light"
                               style="font-size:2.2vh">{{ lesson_creator.first_name }} {{ lesson_creator.last_name }} </span>
@@ -148,6 +144,10 @@ html, body {
                 <a class="text-secondary" href="{% url 'show_test' test.pk %}">{{ test.name }}</a>
             </div>
             {% endfor %}
+
+            {% if not list_test_form %}
+            <div class="fw-light" style="font-size:1.7vh">Nie dodano jeszcze żadnego pytania do tej lekcji.</div>
+            {% endif %}
 
 
         </div>

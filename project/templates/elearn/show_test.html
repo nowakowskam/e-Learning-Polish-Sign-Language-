@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load crispy_forms_tags %}
-{% block title %}{{block.super}}Create_Lesson{% endblock %}
+{% block title %}{{block.super}}Pytanie {{ object.id }}{% endblock %}
 {% load embed_video_tags %}
 
 {% block extra_head %}
@@ -20,18 +20,28 @@
         {
         document.getElementById("UserAnswers").innerHTML = "";
         var e = document.getElementsByTagName("input");
+        var licznik = 0;
             for(i = 0 ; i<=e.length;i++)
             {
                 if(e[i].type=="radio")
                 {
                     if(e[i].checked)
                     {
-                        document.getElementById("UserAnswers").innerHTML+="Q "+e[i].name + " The Answers You Are Selected Is : "+e[i].value+"<br>";
-
+                        if(e[i].value == "{{object.answer}}")
+                        {
+                        document.getElementById("UserAnswers").innerHTML+="<span style='color:green'>Poprawna odpowiedź</span>";
+                        }
+                        else
+                        {
+                        document.getElementById("UserAnswers").innerHTML+="<span style='color:red'>Niepoprawna odpowiedź</span>";
+                        }
                     }
                 }
             }
         }
+
+
+
 
 
 </script>
@@ -46,7 +56,7 @@
         <div>
             <table>
                 <tr>
-                    <td class="text-primary">{{object.id}} ) {{object}} ?</td>
+                    <td class="text-primary">{{object.question}}</td>
                 </tr>
                 <tr>
                     {% if object.image %}
@@ -75,17 +85,23 @@
                     </td>
                 </tr>
 
-                <tr>
+                <tr class="m-0">
                     <td><label id="answer" class="rb"
-                               style="display:none ; color : green"><b>{{object.answer}}</b></label>
+                               style="display:none ; color : green"><b>Poprawna odpowiedź to:
+                        {{object.answer}}</b></label>
                     </td>
                 </tr>
 
             </table>
             <div class="border-secondary border-bottom border-1 mt-3 mb-3"></div> <!-- line -->
 
-            <input type="submit" class="btn btn-success" value="Submit" id="b1" onclick="getanswers()">
+            <input type="submit" class="btn btn-primary" value="Wyświetl poprawną odpowiedź" id="b1"> <!-- button -->
+            <input type="submit" class="btn btn-success" value="Sprawdź odpowiedź" id="b2" onclick="getanswers()">
+            <!-- button -->
             <b id="UserAnswers"></b>
+            <a href="{% url 'show_lesson' object.lesson.pk %}" style="float:right;">
+                <div class="btn btn-secondary">Powrót do lekcji</div>
+            </a>
         </div>
     </div>
 </div>

@@ -23,8 +23,8 @@ class SignUp(CreateView):
     def form_valid(self, form):
         user=form.save()
         login(self.request, user)
-        self.success_url = reverse_lazy('index')
-        messages.success(self.request, 'Witaj')
+        self.success_url = reverse_lazy('login')
+        messages.success(self.request, 'Konto zostało zarejestrowane pomyślnie.')
         return super().form_valid(form)
 
 class CreateProfileView(CreateView):
@@ -37,7 +37,7 @@ class CreateProfileView(CreateView):
         user = User.objects.filter(pk=self.request.user.pk).first()
         profile = Profile.objects.filter(user=user).first()
         self.success_url = reverse_lazy('show_profile')
-        messages.success(self.request, 'Profil zostal zalozony')
+        messages.success(self.request, 'Profil został założony.')
         return super().form_valid(form)
 
 
@@ -68,16 +68,11 @@ class ProfileUpdateView(UpdateView):
     template_name = 'accounts/update_profile.html'
     model=Profile
 
-    # def get_object(self, **kwargs):
-    #     username = self.kwargs.get("username")
-    #     if username is None:
-    #         raise Http404
-    #     return get_object_or_404(Profile, user__username__iexact=username)
     def form_valid(self, form):
         form.instance.user = User.objects.filter(pk=self.request.user.pk).first()
         form.save()
-        self.success_url=reverse_lazy('update_profile', kwargs={'pk': form.instance.id})
-        messages.success(self.request, 'Profile Updated succesfully.')
+        self.success_url=reverse_lazy('show_profile')
+        messages.success(self.request, 'Profil został zaktualizowany pomyślnie.')
         form.cleaned_data
         return super().form_valid(form)
 

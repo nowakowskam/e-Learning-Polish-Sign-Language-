@@ -12,7 +12,7 @@ class Lesson(models.Model):
     url = EmbedVideoField(blank=True, null=True)
     name = models.CharField(max_length=80, verbose_name="Nazwa lekcji")
     create_date = models.DateTimeField(auto_now_add=True)
-    miniature = models.ImageField(upload_to="profile", default="lekcja.png", verbose_name="Miniatura")
+    miniature = models.ImageField(upload_to="", default="lekcja.png", verbose_name="Miniatura")
     description = models.TextField(verbose_name="Opis", editable=True, default="", blank=True)
     # course = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL)
 

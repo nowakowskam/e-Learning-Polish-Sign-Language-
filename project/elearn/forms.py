@@ -30,16 +30,16 @@ class LessonForm(forms.ModelForm):
 
 
 class TestCreateForm(forms.ModelForm):
-    image = forms.ImageField(required=False)
-    video = forms.URLField(required=False)
-    name =  forms.CharField()
-    question = forms.CharField()
+    image = forms.ImageField(label="Zdjęcie do pytania", required=False)
+    video = forms.URLField(label="Wideo do pytania", required=False)
+    name =  forms.CharField(label="Nazwa pytania")
+    question = forms.CharField(label="Treść pytania")
     option1= forms.CharField(label="Odpowiedz 1")
     option2 = forms.CharField(label="Odpowiedz 2")
     option3 = forms.CharField(label="Odpowiedz 3")
     option4 = forms.CharField(label="Odpowiedz 4")
-    answer = forms.ChoiceField(choices=[('option1',str(option1.label)),('option2',str(option2.label)), ('option3',str(option3.label)),('option4',str(option4.label))])
-    lesson =forms.ModelChoiceField(widget=forms.Select, queryset=Lesson.objects.none())
+    answer = forms.ChoiceField(label="Prawidłowa odpowiedź", choices=[('option1',str(option1.label)),('option2',str(option2.label)), ('option3',str(option3.label)),('option4',str(option4.label))])
+    lesson =forms.ModelChoiceField(label="Przypisanie do lekcji", widget=forms.Select, queryset=Lesson.objects.none())
 
     class Meta:
         model = Test
@@ -53,6 +53,7 @@ class TestCreateForm(forms.ModelForm):
                   'option4',
                   'answer',
                   'lesson']
+
 
     def __init__(self, *args, **kwargs):
         test_owner = kwargs.pop('test_owner', None)
