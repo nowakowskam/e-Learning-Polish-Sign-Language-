@@ -78,7 +78,7 @@ html, body {
             <table>
                 <tr>
                     <td rowspan="2" class="pe-2">
-                        <img src="{% static User.profile.profile_photo.url %}" width="75vh" height="75vh"/>
+                        <img src="{% get_media_prefix %}/{{ profile.profile_photo }}" width="75vh" height="75vh"/>
                     </td>
                     <td><span class="fw-light"
                               style="font-size:1.6vh">{{ profile.first_name }} {{ profile.last_name }} </span><span

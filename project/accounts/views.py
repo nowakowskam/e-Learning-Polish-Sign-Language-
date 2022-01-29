@@ -76,3 +76,12 @@ class ProfileUpdateView(UpdateView):
         form.cleaned_data
         return super().form_valid(form)
 
+from django.shortcuts import render
+
+def error_404(request, exception):
+        data = {}
+        return render(request,'accounts/404.html', data)
+
+def error_500(request,  exception):
+        data = {}
+        return render(request,'accounts/500.html', data)

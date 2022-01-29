@@ -19,3 +19,5 @@ path('test_list/<int:pk>/test_confirm_delete', login_required(views.DeleteTestVi
 path('list_lesson/<int:pk>/lesson_confirm_delete', login_required(views.LessonDeleteView.as_view()), name='delete_lesson')
 ]
 
+handler404 = 'accounts.views.error_404'
+

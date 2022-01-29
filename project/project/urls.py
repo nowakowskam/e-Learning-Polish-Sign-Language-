@@ -20,13 +20,23 @@ from django.conf import settings
 from django.conf.urls.static import static
 from accounts import views
 from elearn import views
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
+
 
 urlpatterns = [
+
     path("admin/", admin.site.urls),
     path("",views.index, name="index"),
     path("elearn/", include('elearn.urls')),
     path("accounts/", include('accounts.urls'))
+
 ]
+
+
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+else:
+    urlpatterns += staticfiles_urlpatterns()
+
