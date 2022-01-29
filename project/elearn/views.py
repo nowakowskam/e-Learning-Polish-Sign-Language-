@@ -14,7 +14,8 @@ from accounts.models import User
 from accounts.models import Profile
 from .models import Comment
 from django.shortcuts import redirect
-
+import os
+from django.conf import settings
 
 from django.shortcuts import get_object_or_404
 from .models import Lesson, Test
@@ -126,6 +127,8 @@ class ShowLessonView(DetailView):
         if 'list_test_form' not in context:
             context['list_test_form'] = Test.objects.filter(lesson=self.object).values('pk', 'name') #znajduje wszystkie testy przypisane do lekcji i selekcjonuje tylko ta pierwsza
 
+        context['media_url'] = settings.MEDIA_ROOT
+        print(context['media_url'])
         return context
 
 
@@ -170,6 +173,7 @@ class UpdateLessonView(UpdateView):
         form.save()
         messages.success(self.request, 'Zmiany zostały zapisane.')
         return super().form_valid(form)
+
 
 
 
@@ -310,3 +314,10 @@ class ShowTestView(DetailView):
 def index(request):
     dane = {'title' : 'About'}
     return render(request, 'base.html',dane)
+
+from django.shortcuts import render
+
+def error_404(request, exception):
+        data = {}
+        return render(request,'elearn/404.html', data)
+
