@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from django.views.generic.edit import CreateView
-from django.views.generic.edit import FormView
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
-from django.views.generic import DetailView, TemplateView
+from django.views.generic import DetailView
 from django.views.generic import DeleteView
+
 from django import http
 from django.contrib import messages
 from django.urls import reverse_lazy
@@ -160,11 +160,6 @@ class ShowLessonView(DetailView):
 
 
 
-    # def get_success_url(self, item):  # noqa: D102
-    #     pk = self.item.pk
-    #     return reverse_lazy('show_lesson', kwargs={'pk': pk})
-
-
 
 
 class UpdateLessonView(UpdateView):
@@ -257,9 +252,6 @@ class TestListView(ListView):
 
 
 
-
-
-# zmien test
 class UpdateTestView(UpdateView):
     model = Test
     form_class = TestCreateForm

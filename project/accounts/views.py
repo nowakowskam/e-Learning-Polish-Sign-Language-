@@ -1,18 +1,11 @@
-import profile
-
-import requests
-
 from .forms import UserRegisterForm
-from django.conf import settings
-from django.views.generic.edit import CreateView
 from django.contrib.auth import login
-from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, UpdateView
 from django.contrib import messages
 from .forms import ProfileForm
 from .models import User, Profile
-from django.shortcuts import get_object_or_404, Http404
+
 
 class SignUp(CreateView):
     form_class = UserRegisterForm
