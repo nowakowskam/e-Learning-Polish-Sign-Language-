@@ -204,7 +204,8 @@ class LessonDeleteView(DeleteView):
                 self.object.delete()
                 return http.HttpResponseRedirect(success_url)
             else:
-                return http.HttpResponseForbidden("Możesz usunać tylko swoją lekcje")
+                messages.info(self.request, "Możesz usunąć tylko swoją lekcje")
+                return redirect(reverse_lazy('list_lesson'))
 
 
 

@@ -11,7 +11,11 @@
             <ul class="navbar-nav mb-2 mb-lg-0 me-auto">
 
                 {% if user.is_authenticated %}
-
+                {% if user.is_superuser %}
+                <li class="nav-item">
+                    <a class="nav-link active navbar-right" aria-current="page" href="/admin">Panel admina</a>
+                </li>
+                {% endif %}
                 {% if user.is_teacher or user.is_superuser %}
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{% url 'create_test' %}">Stwórz pytanie</a>

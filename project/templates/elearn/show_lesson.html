@@ -52,7 +52,7 @@ html, body {
             <form method="POST" class="bootstrap4" enctype="multipart/form-data">{% csrf_token %}
                 {{ new_comment_form }}
                 <div class="mt-3">
-                    <button class="btn btn-primary btn-block text-white btn-user col-md-2" type="submit">Submit</button>
+                    <button class="btn btn-primary btn-block text-white btn-user col-md-2" type="submit">Wyślij</button>
                 </div>
                 {% elif user.is_authenticated %}
                 <span class="fw-light" style="font-size:1.6vh">Utwórz profil jeśli chcesz dodawać komentarze. </span><a
