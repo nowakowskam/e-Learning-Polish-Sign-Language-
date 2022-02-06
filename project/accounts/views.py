@@ -9,45 +9,41 @@ from .models import User, Profile
 
 class SignUp(CreateView):
     form_class = UserRegisterForm
-    success_url = reverse_lazy('login')
-    template_name = 'accounts/register.html'
-
+    success_url = reverse_lazy("login")
+    template_name = "accounts/register.html"
 
     def form_valid(self, form):
-        user=form.save()
+        user = form.save()
         login(self.request, user)
-        self.success_url = reverse_lazy('login')
-        messages.success(self.request, 'Konto zostało zarejestrowane pomyślnie.')
+        self.success_url = reverse_lazy("login")
+        messages.success(self.request, "Konto zostało zarejestrowane pomyślnie.")
         return super().form_valid(form)
+
 
 class CreateProfileView(CreateView):
     form_class = ProfileForm
-    template_name = 'accounts/create_profile.html'
+    template_name = "accounts/create_profile.html"
     profile_exists = None
 
     def form_valid(self, form):
-        form.instance.user_id=self.request.user.pk
+        form.instance.user_id = self.request.user.pk
         user = User.objects.filter(pk=self.request.user.pk).first()
         profile = Profile.objects.filter(user=user).first()
-        self.success_url = reverse_lazy('show_profile')
-        messages.success(self.request, 'Profil został założony.')
+        self.success_url = reverse_lazy("show_profile")
+        messages.success(self.request, "Profil został założony.")
         return super().form_valid(form)
-
 
     def get_context_data(self, **kwargs):
         context = super(CreateProfileView, self).get_context_data(**kwargs)
-        context['profile_exists']= Profile.objects.filter(
-            user=User.objects.filter(
-                pk=self.request.user.pk
-            ).first())
+        context["profile_exists"] = Profile.objects.filter(
+            user=User.objects.filter(pk=self.request.user.pk).first()
+        )
         return context
-
-
 
 
 class ShowProfileView(DetailView):
     model = Profile
-    template_name = 'accounts/show_profile.html'
+    template_name = "accounts/show_profile.html"
 
     def get_object(self):
         user = User.objects.filter(pk=self.request.user.pk).first()
@@ -58,24 +54,27 @@ class ShowProfileView(DetailView):
 
 class ProfileUpdateView(UpdateView):
     form_class = ProfileForm
-    template_name = 'accounts/update_profile.html'
-    model=Profile
+    template_name = "accounts/update_profile.html"
+    model = Profile
 
     def form_valid(self, form):
         form.instance.user = User.objects.filter(pk=self.request.user.pk).first()
         form.save()
-        self.success_url=reverse_lazy('show_profile')
-        messages.success(self.request, 'Profil został zaktualizowany pomyślnie.')
+        self.success_url = reverse_lazy("show_profile")
+        messages.success(self.request, "Profil został zaktualizowany pomyślnie.")
         form.cleaned_data
         return super().form_valid(form)
 
+
 from django.shortcuts import render
+
 
 def error_404(request, exception, template_name="accounts/404.html"):
     context = {}
     response = render(request, template_name=template_name, context=context)
     response.status_code = 404
     return response
+
 
 def error_500(request, template_name="accounts/500.html"):
     context = {}
