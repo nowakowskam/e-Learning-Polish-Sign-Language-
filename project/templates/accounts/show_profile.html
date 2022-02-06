@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load embed_video_tags %}
+{% block title %}{{block.super}}Profil{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="container py-5">
+    {% if profile %}
+    <div class="content-section"
+         style="width:70vh; float:center; margin:0 auto; border: 8px groove #207CB8; border-radius: 40px 40px 40px 40px;">
+        <div class="ms-5 mb-5 fw-light" style="width:85%">
+        <div class="row pt-5 border-bottom mb-4 lead border-bottom mb-4 fw-light border-primary">
+            <div class="col-md-4 mb-1" style="font-size: 1.9rem;">Twój profil</div>
+            <div class="col-md-8 text-end" style="font-size: 1.9rem;">
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-md-4 mb-4"><img src="{{ profile.profile_photo.url }}" width="125vh" height="125vh" class="rounded-circle"/></div>
+        </div>
+
+        <div class="row mb-2">
+            <div class="col-md-2">Imię:</div>
+            <div class="col-md-4">{{ profile.first_name }}</div>
+        </div>
+
+        <div class="row mb-2">
+            <div class="col-md-2">Nazwisko:</div>
+            <div class="col-md-4">{{ profile.last_name }}</div>
+        </div>
+            
+        {% if profile.email %}
+        <div class="row mb-2">
+            <div class="col-md-2">Email:</div>
+            <div class="col-md-4">{{ profile.email }}</div>
+        </div>
+        {% endif %}
+
+        <div class="row mb-2">
+            <div class="col-md-2">Urodziny:</div>
+            <div class="col-md-4">{{ profile.birth_date|date:'d-m-Y' }}</div>
+        </div>
+
+            {% if profile.bio %}
+        <div class="row mb-4">
+            <div class="col-md-2">O mnie:</div>
+            <div class="row-md-4 text-start">{{ profile.bio }}</div>
+        </div>
+            {% endif %}
+
+        <div class="lead border-bottom mb-4 fw-light border-primary"></div>
+            <div class="text-end">
+        <a href="{% url 'update_profile' profile.pk %}">
+            <button class="btn btn-primary btn-block text-white btn-user col-md-3">Edytuj profil</button>
+        </a></div>
+        {% else %}
+        <div class="fs-3 m-5">W pierwszej kolejności musisz utworzyć swój profil.
+        <div class="mt-3"><a href="{% url 'create_profile' %}">
+            <button class="btn btn-primary btn-block text-white btn-user col-md-3">Utwórz profil</button>
+        </a></div>
+            </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endif %}
+{% endblock %}

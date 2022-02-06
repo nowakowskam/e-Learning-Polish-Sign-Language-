@@ -2,50 +2,90 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% load embed_video_tags %}
-{% block title %}{{block.super}}Create_Lesson{% endblock %}
+{% block title %}{{block.super}}Lista lekcji{% endblock %}
+
+{% block extra_head %}
+<style>
+td {
+    height:140px;
+}
+
+
+
+</style>
+{% endblock %}
 
 {% block content %}
 {% if user.is_authenticated %}
 
 <div class="container">
     <div class="py-5">
-
         <div class="row border-bottom mb-4 pt-5">
-
             <div class="lead col-md-6" style="font-size: 2rem;">Lista lekcji</div>
-            <div class="col-md-6">
-                {% if user.is_teacher %}
-                <a href="{% url 'create_lesson' %}">
-                    <button onClick=submit type="button" class="btn btn-danger float-right">Create Ticket</button>
-                </a>
-
-                {% endif %}
-            </div>
         </div>
-        <table class="table">
+        <table class="table fw-light">
             <thead class="thead-light">
             <tr class="text-center">
-                <th scope="col">ID</th>
-                <th scope="col">Lekcja</th>
-                <th scope="col">Miniatura</th>
-                <th scope="col">Opis</th>
-                <th scope="col">Dodana przez:</th>
-                <th scope="col"></th>
+                <th scope="col" width="5%">ID</th>
+                <th scope="col" width="15%">Lekcja</th>
+                <th scope="col" width="26%">Miniaturka</th>
+                <th scope="col" width="29%">Opis</th>
+                <th scope="col" width="10%">Dodana przez</th>
+                {% if user.is_superuser or user.is_teacher %}
+                <th scope="col" width="15%">Akcje</th>
+                {% endif %}
             </tr>
             </thead>
             <tbody>
-            <tr class="text-center">
-                {% for item in object_list %}
-                <th class="text-center" scope="row"><a
-                        href="{% url 'show_lesson' item.pk %}">{{ item.pk }}</a></th>
-                <td>{{ item.name }}</td>
-                <td><a href="{% url 'show_lesson' item.pk  %}">
-                    <img src="{{ item.miniature.url }}" width="300px" height="150"/></a></td>
-                <td>{{ item.description }}</td>
-                <td>{{ item.user.username }}</td>
+            {% for item in object_list %}
+            <tr class="text-center align-middle">
+                <th class="text-center" scope="row">
+                    <a href="{% url 'show_lesson' item.pk %}">{{ item.pk }}</a>
+                </th>
+
+                <td>
+                    {{ item.name }}
+                </td>
+
+                <td>
+                    <a href="{% url 'show_lesson' item.pk  %}">
+                        <img src="{{ item.miniature.url }}" width="100%" height="100%"/>
+                    </a>
+                </td>
+
+                <td>
+                    <div class="text-start">
+                        {{ item.description|truncatechars:150 }}
+                    </div>
+                </td>
+
+                <td>
+                    {{ item.user.username }}
+                </td>
+
                 {% if user.is_superuser or user.is_teacher %}
-                <td><a href="{% url 'update_lesson' item.pk %}"><button type="button" class="btn btn-primary">Edytuj</button></a></td>
-                 <td><a href="{% url 'delete_lesson' item.pk %}"><button type="button" class="btn btn-danger">Usuń</button></a></td>
+
+                <td>
+                    <table class="table align-middle">
+                        <td class="pt-4" style="border: none;">
+                            <a href="{% url 'update_lesson' item.pk %}">
+                                <button type="button" class="btn btn-primary">Edytuj</button>
+                            </a>
+                        </td>
+                        <td class="pt-4" style="border: none;">
+
+
+                            <form action="{% url 'delete_lesson' item.pk %}" method="post" style="display: inline;" onsubmit="window.mytest()">
+                                {% csrf_token %}
+                                <input type="hidden"/>
+                                <button type="submit" class="btn btn-danger">Usuń</button>
+                            </form>
+                            <script type="text/javascript">
+                                window.mytest = function() { var isValid = confirm('Czy jesteś tego pewien ?');if (!isValid) { event.preventDefault();  alert("Anulowano usuwanie.");}}
+                            </script>
+                        </td>
+                    </table>
+                </td>
 
                 {% endif %}
             </tr>
@@ -53,6 +93,7 @@
             {% endfor %}
 
         </table>
+        {% include 'paging.html' %}
     </div>
 </div>
 {% endif %}

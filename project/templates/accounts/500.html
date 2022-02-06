@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}{{block.super}}Strony nie znaleziono{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="content-section">
+
+        <div class="section">
+
+          <div style="padding: 20px;">
+            <p style="font-size: 18px;">Nastąpił błąd: <strong> 500 - strona o podanym adresie nie istnieje. </strong>	</p>
+            <br><br><br>
+            Spróbuj wykonać następujące operacje:<br><br>
+            <ul style="margin-left: 30px;">
+              <li>• Spróbuj otworzyć <a href="">stronę główną</a> serwisu</li>
+              <li>• Spróbuj połączyć się ze stroną z innego komputera</li>
+              <li>• Jeżeli problem pozostanie możesz skontaktować się z właścicielem strony</li>
+            </ul>
+
+          </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
