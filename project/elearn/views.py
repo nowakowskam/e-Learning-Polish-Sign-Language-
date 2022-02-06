@@ -179,8 +179,12 @@ class ListLessonView(ListView):
     model = Lesson
     template_name = "elearn/list_lesson.html"
 
-    def get_success_url(self):  # noqa: D102
-        qs = self.model.objects.all()
+    def get_queryset(self):
+        user = User.objects.filter(pk=self.request.user.pk).first()
+        if user.is_teacher:
+            qs = self.model.objects.filter(user=user)
+        else:
+            qs = self.model.objects.all()
         return qs
 
 
@@ -198,9 +202,11 @@ class LessonDeleteView(DeleteView):
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if self.object.user == request.user:
+        if_is_super_user = User.objects.filter(pk=self.request.user.pk).first().is_superuser
+        if self.object.user == request.user or if_is_super_user:
             success_url = self.get_success_url()
             self.object.delete()
+            messages.info(self.request, "Pomyślnie usunięto lekcję!")
             return http.HttpResponseRedirect(success_url)
         else:
             messages.info(self.request, "Możesz usunąć tylko swoją lekcje")
@@ -242,8 +248,12 @@ class TestListView(ListView):
     paginate_by = 5
     model = Test
 
-    def get_success_url(self):  # noqa: D102
-        qs = self.model.objects.all()
+    def get_queryset(self):
+        user = User.objects.filter(pk=self.request.user.pk).first()
+        if user.is_teacher:
+            qs = self.model.objects.filter(owner=user)
+        else:
+            qs = self.model.objects.all()
         return qs
 
 
@@ -289,12 +299,14 @@ class DeleteTestView(DeleteView):
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if self.object.owner == request.user:
+        if_is_super_user = User.objects.filter(pk=self.request.user.pk).first().is_superuser
+        if self.object.owner == request.user or if_is_super_user:
             success_url = self.get_success_url()
             self.object.delete()
+            messages.info(self.request, "Pomyślnie usunięto pytanie!")
             return http.HttpResponseRedirect(success_url)
         else:
-            return http.HttpResponseForbidden("Możesz usunać tylko swój test")
+            return http.HttpResponseForbidden("Możesz usunać tylko swoje pytanie")
 
 
 class ShowTestView(DetailView):
