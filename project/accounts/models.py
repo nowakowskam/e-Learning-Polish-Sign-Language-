@@ -3,9 +3,9 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    is_learner = models.BooleanField(default=True)
-    is_teacher = models.BooleanField(default=False)
-    is_admin = models.BooleanField(default=False)
+    is_learner = models.BooleanField(default=True, verbose_name='uczen')
+    is_teacher = models.BooleanField(default=False, verbose_name='nauczyciel')
+    is_admin = models.BooleanField(default=False, verbose_name='admin')
 
     class Meta:
         verbose_name = "Użytkownik"
